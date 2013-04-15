@@ -2,7 +2,7 @@
 
 /**
  * @file
- *   Various theme hook implementations.
+ * Various theme hook implementations.
  */
 
 /**
@@ -30,7 +30,7 @@ function vassadora_filter_and_classify_page_entries(array &$pages) {
       if ($num_sections > 1) {
         foreach ($page['sections'] as $index => &$section) {
           $section['class'] = 'text' . ((($index & 1) == 0)?
-            'Left':
+            'Left' :
             'Right');
         }
       }
@@ -72,7 +72,7 @@ function template_preprocess_vassadora_one_page_fulltext(array &$vars) {
       array(
         'label' => $object->label,
         'text' => (isset($object['TRANSCRIPTION_ENG'])?
-          $object['TRANSCRIPTION_ENG']->content:
+          $object['TRANSCRIPTION_ENG']->content :
           FALSE),
       ),
     ),
@@ -83,7 +83,7 @@ function template_preprocess_vassadora_one_page_fulltext(array &$vars) {
       array(
         'label' => $object->label,
         'text' => (isset($object['TRANSCRIPTION_GER'])?
-          $object['TRANSCRIPTION_GER']->content:
+          $object['TRANSCRIPTION_GER']->content :
           FALSE),
       ),
     ),
@@ -94,13 +94,13 @@ function template_preprocess_vassadora_one_page_fulltext(array &$vars) {
       array(
         'label' => t('English'),
         'text' => (isset($object['TRANSCRIPTION_ENG'])?
-          $object['TRANSCRIPTION_ENG']->content:
+          $object['TRANSCRIPTION_ENG']->content :
           FALSE),
       ),
       array(
         'label' => t('German'),
         'text' => (isset($object['TRANSCRIPTION_GER'])?
-          $object['TRANSCRIPTION_GER']->content:
+          $object['TRANSCRIPTION_GER']->content :
           FALSE),
       ),
     ),
@@ -124,13 +124,13 @@ function template_preprocess_vassadora_two_page_fulltext(array &$vars) {
       array(
         'label' => t('Left'),
         'text' => (isset($left_object['TRANSCRIPTION_ENG'])?
-          $left_object['TRANSCRIPTION_ENG']->content:
+          $left_object['TRANSCRIPTION_ENG']->content :
           FALSE),
       ),
       array(
         'label' => t('Right'),
         'text' => (isset($right_object['TRANSCRIPTION_ENG'])?
-          $right_object['TRANSCRIPTION_ENG']->content:
+          $right_object['TRANSCRIPTION_ENG']->content :
           FALSE),
       ),
     ),
@@ -141,13 +141,13 @@ function template_preprocess_vassadora_two_page_fulltext(array &$vars) {
       array(
         'label' => t('Left'),
         'text' => (isset($left_object['TRANSCRIPTION_GER'])?
-          $left_object['TRANSCRIPTION_GER']->content:
+          $left_object['TRANSCRIPTION_GER']->content :
           FALSE),
       ),
       array(
         'label' => t('Right'),
         'text' => (isset($right_object['TRANSCRIPTION_GER'])?
-          $right_object['TRANSCRIPTION_GER']->content:
+          $right_object['TRANSCRIPTION_GER']->content :
           FALSE),
       ),
     ),
@@ -155,4 +155,3 @@ function template_preprocess_vassadora_two_page_fulltext(array &$vars) {
 
   vassadora_filter_and_classify_page_entries($vars['pages']);
 }
-

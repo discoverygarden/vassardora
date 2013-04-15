@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- *   Template for the full-text override for Vassar.
+ * Template for the full-text override for Vassar.
  */
 
 // XXX: Use of "tabs primary" is a quick hack to get 'em showing in a
@@ -27,4 +27,3 @@ foreach ($pages as $name => $info):
   <?php endforeach; ?>
 </div>
 <?php endforeach; ?>
-

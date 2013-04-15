@@ -2,7 +2,7 @@
 
 /**
  * @file
- *   Hook implementations for Vassar.
+ * Hook implementations for Vassar.
  */
 
 define('VASSADORA_FULLTEXT_PATH', 'vassadora/bookreader_fulltext');
@@ -52,7 +52,7 @@ function vassadora_fulltext_access_callback() {
   $to_return = FALSE;
 
   if (isset($_GET['pids'])) {
-    $pids = (array)$_GET['pids'];
+    $pids = (array) $_GET['pids'];
     foreach ($pids as $pid) {
       $object = islandora_object_load($pid);
       if ($object) {
@@ -74,7 +74,7 @@ function vassadora_fulltext_access_callback() {
  */
 function vassadora_fulltext_page_callback() {
   $output = '';
-  $pids = (array)$_GET['pids'];
+  $pids = (array) $_GET['pids'];
   $num_pids = count($pids);
   if ($num_pids == 2) {
     // Render two-page view.

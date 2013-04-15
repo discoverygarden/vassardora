@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Override for the IA Bookreader.
+ */
+
 (function ($) {
   IslandoraBookReader.prototype.buildFullTextDiv = function(jFullTextDiv) {
     jFullTextDiv.find('.BRfloatMeta').height(600);
@@ -28,4 +33,3 @@ console.log(request_data.pids);
     }
   }
 })(jQuery)
-
