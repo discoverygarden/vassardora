@@ -78,14 +78,115 @@ function vassadora_fulltext_page_callback() {
   $num_pids = count($pids);
   if ($num_pids == 2) {
     // Render two-page view.
-    $output = theme('vassadora_two_page_fulltext', array(
+    $objects = array_filter(array_map('islandora_object_load', $pids));
+    list($left_object, $right_object) = $objects;
+
+    $pages = array(
+      'english' => array(
+        'label' => t('English'),
+        'sections' => array(
+          array(
+            'label' => t('Left'),
+            'text' => vassadora_load_fulltext($left_object, 'TRANSCRIPTION_ENG'),
+          ),
+          array(
+            'label' => t('Right'),
+            'text' => vassadora_load_fulltext($right_object, 'TRANSCRIPTION_ENG'),
+          ),
+        ),
+      ),
+      'german' => array(
+        'label' => t('German'),
+        'sections' => array(
+          array(
+            'label' => t('Left'),
+            'text' => vassadora_load_fulltext($left_object, 'TRANSCRIPTION_GER'),
+          ),
+          array(
+            'label' => t('Right'),
+            'text' => vassadora_load_fulltext($right_object, 'TRANSCRIPTION_GER'),
+          ),
+        ),
+      ),
+      'ocr' => array(
+        'label' => t('OCR'),
+        'sections' => array(
+          array(
+            'label' => t('Left'),
+            'text' => vassadora_load_fulltext($left_object, 'OCR'),
+          ),
+          array(
+            'label' => t('Right'),
+            'text' => vassadora_load_fulltext($right_object, 'OCR'),
+          ),
+        ),
+      ),
+    );
+
+    $output = theme('vassadora_fulltext', array(
       'pids' => $pids,
+      'objects' => $objects,
+      'pages' => $pages,
     ));
   }
   elseif ($num_pids == 1) {
     // Render one-page view.
-    $output = theme('vassadora_one_page_fulltext', array(
+    $object = islandora_object_load(reset($pids));
+
+    $pages = array(
+      'english' => array(
+        'label' => t('English'),
+        'sections' => array(
+          array(
+            'label' => $object->label,
+            'text' => vassadora_load_fulltext($object, 'TRANSCRIPTION_ENG'),
+          ),
+        ),
+      ),
+      'german' => array(
+        'label' => t('German'),
+        'sections' => array(
+          array(
+            'label' => $object->label,
+            'text' => vassadora_load_fulltext($object, 'TRANSCRIPTION_GER'),
+          ),
+        ),
+      ),
+    );
+
+    // Kinda gross, but we only want to add the side-by-side if we have text
+    // in both languages.
+    if ($pages['english']['sections'][0]['text'] && $pages['german']['sections'][0]['text']) {
+      $pages['full_text'] = array(
+        'label' => t('Side-by-side'),
+        'sections' => array(
+          array(
+            'label' => t('English'),
+            'text' => $pages['english']['sections'][0]['text'],
+          ),
+          array(
+            'label' => t('German'),
+            'text' => $pages['german']['sections'][0]['text'],
+          ),
+        ),
+      );
+    }
+
+    // Add in a page for the base OCR...
+    $pages['ocr'] = array(
+      'label' => t('OCR'),
+      'sections' => array(
+        array(
+          'label' => $object->label,
+          'text' => vassadora_load_fulltext($object, 'OCR'),
+        ),
+      ),
+    );
+
+    $output = theme('vassadora_fulltext', array(
       'pids' => $pids,
+      'objects' => array($object),
+      'pages' => $pages,
     ));
   }
   else {
@@ -102,7 +203,7 @@ function vassadora_fulltext_page_callback() {
 function vassadora_theme() {
   $items = array();
 
-  $base = array(
+  $items['vassadora_fulltext'] = array(
     'file' => 'theme/theme.inc',
     'variables' => array(
       'pids' => NULL,
@@ -111,9 +212,24 @@ function vassadora_theme() {
     'template' => 'theme/vassadora-multiple-fulltexts',
   );
 
-  $items['vassadora_one_page_fulltext'] = $base;
-  $items['vassadora_two_page_fulltext'] = $base;
-
   return $items;
 }
 
+/**
+ * Get the a fulltext representation for the current stream.
+ *
+ * @param AbstractObject $object
+ *   The object from which we want to get fulltext.
+ * @param string $datastream_id
+ *   The datastream from which to attempt to grab fulltext.
+ *
+ * @return string|bool
+ *   A string containing the fulltext, or FALSE if there was none to get.
+ */
+function vassadora_load_fulltext(AbstractObject $object, $datastream_id) {
+  if (isset($object[$datastream_id])) {
+    return $object[$datastream_id]->content;
+  }
+
+  return FALSE;
+}

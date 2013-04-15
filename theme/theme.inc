@@ -45,8 +45,16 @@ function vassadora_filter_and_classify_page_entries(array &$pages) {
   $pages = array_filter($pages, function ($element) {
     return (count($element['sections']) > 0);
   });
-  if (count($pages) == 0) {
-    $pages['no_text'] = array(
+}
+
+/**
+ * Implements template_preprocess_HOOK().
+ */
+function template_preprocess_vassadora_fulltext(array &$vars) {
+  vassadora_filter_and_classify_page_entries($vars['pages']);
+
+  if (count($vars['pages']) == 0) {
+    $vars['pages']['no_text'] = array(
       'label' => t('N/A'),
       'sections' => array(
         array(
@@ -57,101 +65,4 @@ function vassadora_filter_and_classify_page_entries(array &$pages) {
       ),
     );
   }
-}
-
-/**
- * Implements template_preprocess_HOOK().
- */
-function template_preprocess_vassadora_one_page_fulltext(array &$vars) {
-  $object = islandora_object_load(reset($vars['pids']));
-
-  // Add a single "page" with section for each language.
-  $vars['pages']['english'] = array(
-    'label' => t('English'),
-    'sections' => array(
-      array(
-        'label' => $object->label,
-        'text' => (isset($object['TRANSCRIPTION_ENG'])?
-          $object['TRANSCRIPTION_ENG']->content :
-          FALSE),
-      ),
-    ),
-  );
-  $vars['pages']['german'] = array(
-    'label' => t('German'),
-    'sections' => array(
-      array(
-        'label' => $object->label,
-        'text' => (isset($object['TRANSCRIPTION_GER'])?
-          $object['TRANSCRIPTION_GER']->content :
-          FALSE),
-      ),
-    ),
-  );
-  $vars['pages']['full_text'] = array(
-    'label' => t('Side-by-side'),
-    'sections' => array(
-      array(
-        'label' => t('English'),
-        'text' => (isset($object['TRANSCRIPTION_ENG'])?
-          $object['TRANSCRIPTION_ENG']->content :
-          FALSE),
-      ),
-      array(
-        'label' => t('German'),
-        'text' => (isset($object['TRANSCRIPTION_GER'])?
-          $object['TRANSCRIPTION_GER']->content :
-          FALSE),
-      ),
-    ),
-  );
-
-  vassadora_filter_and_classify_page_entries($vars['pages']);
-}
-
-/**
- * Implements template_preprocess_HOOK().
- */
-function template_preprocess_vassadora_two_page_fulltext(array &$vars) {
-  // Add two "pages", one with each language.
-  list($left_pid, $right_pid) = $vars['pids'];
-  $left_object = islandora_object_load($left_pid);
-  $right_object = islandora_object_load($right_pid);
-
-  $vars['pages']['english'] = array(
-    'label' => t('English'),
-    'sections' => array(
-      array(
-        'label' => t('Left'),
-        'text' => (isset($left_object['TRANSCRIPTION_ENG'])?
-          $left_object['TRANSCRIPTION_ENG']->content :
-          FALSE),
-      ),
-      array(
-        'label' => t('Right'),
-        'text' => (isset($right_object['TRANSCRIPTION_ENG'])?
-          $right_object['TRANSCRIPTION_ENG']->content :
-          FALSE),
-      ),
-    ),
-  );
-  $vars['pages']['german'] = array(
-    'label' => t('German'),
-    'sections' => array(
-      array(
-        'label' => t('Left'),
-        'text' => (isset($left_object['TRANSCRIPTION_GER'])?
-          $left_object['TRANSCRIPTION_GER']->content :
-          FALSE),
-      ),
-      array(
-        'label' => t('Right'),
-        'text' => (isset($right_object['TRANSCRIPTION_GER'])?
-          $right_object['TRANSCRIPTION_GER']->content :
-          FALSE),
-      ),
-    ),
-  );
-
-  vassadora_filter_and_classify_page_entries($vars['pages']);
 }

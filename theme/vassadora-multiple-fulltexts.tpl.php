@@ -9,16 +9,13 @@
 ?>
 <ul class="tabs primary">
   <?php foreach ($pages as $name => $info):?>
-  <li  onclick="jQuery('.vassadora_fulltext').hide(); jQuery('#vassadora_fulltext_<?php echo $name;?>').show();"><a href='#BRfulltext'><?php echo $info['label']; ?></a></li>
+  <li name="vassadora_fulltext_<?php echo $name;?>" class="vassadora_fulltext_link"><a href='#BRfulltext'><?php echo $info['label']; ?></a></li>
   <?php endforeach; ?>
 </ul>
 <?php
-// Keep track if this is the first page, as we want to render the first
-// page, and leave the others hidden.
-$first_page = TRUE;
 foreach ($pages as $name => $info):
 ?>
-<div class="vassadora_fulltext" id="vassadora_fulltext_<?php echo $name; ?>" <?php if ($first_page): $first_page = FALSE; else: ?>style="display: none;" <?php endif; ?>>
+<div class="vassadora_fulltext" id="vassadora_fulltext_<?php echo $name; ?>">
   <?php foreach ($info['sections'] as $section): ?>
   <div class="<?php echo $section['class']; ?>">
     <em class="label"><?php echo $section['label']; ?></em>

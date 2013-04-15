@@ -24,10 +24,20 @@
           request_data.pids.push(this.getPID(indices[i]));
         }
       }
-console.log(request_data.pids);
       $.get(Drupal.settings.vassadora.text_url, request_data,
         function(data) {
           jFullTextDiv.find('.BRfloatMeta').html(data);
+
+          // Show the related element, when clicked.
+          $('li.vassadora_fulltext_link').click(function(eventObject) {
+            var li = $(this);
+            $('li.vassadora_fulltext_link').removeClass('active').children('a').removeClass('active');
+            li.addClass('active').children('a').addClass('active');
+            $('.vassadora_fulltext').hide().filter('#' + li.attr('name')).show();
+          });
+
+          // Initially show the first "page".
+          $('li.vassadora_fulltext_link').first().click();
         }
       );
     }
