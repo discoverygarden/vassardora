@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * Implements hook_uninstall().
+ *
+ * Deletes our variables.
+ */
+function vassadora_uninstall() {
+  $variables = array(
+    'vassadora_english_fulltext_datastream',
+    'vassadora_german_fulltext_datastream',
+  );
+
+  array_map('variable_del', $variables);
+}

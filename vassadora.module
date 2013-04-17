@@ -42,6 +42,15 @@ function vassadora_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['admin/islandora/vassadora'] = array(
+    'title' => 'Vassadora Config',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('vassadora_admin_form'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'includes/admin.form.inc',
+    'type'=> MENU_NORMAL_ITEM,
+  );
+
   return $items;
 }
 
@@ -73,6 +82,10 @@ function vassadora_fulltext_access_callback() {
  * Page callback to render the fulltext as desired.
  */
 function vassadora_fulltext_page_callback() {
+  // Get the datastream IDs from which we'll try to get the language variants.
+  $english_dsid = variable_get('vassadora_english_fulltext_datastream', 'TRANSCRIPTION_ENG');
+  $german_dsid = variable_get('vassadora_german_fulltext_datastream', 'TRANSCRIPTION_GER');
+
   $output = '';
   $pids = (array) $_GET['pids'];
   $num_pids = count($pids);
@@ -87,11 +100,11 @@ function vassadora_fulltext_page_callback() {
         'sections' => array(
           array(
             'label' => t('Left'),
-            'text' => vassadora_load_fulltext($left_object, 'TRANSCRIPTION_ENG'),
+            'text' => vassadora_load_fulltext($left_object, $english_dsid),
           ),
           array(
             'label' => t('Right'),
-            'text' => vassadora_load_fulltext($right_object, 'TRANSCRIPTION_ENG'),
+            'text' => vassadora_load_fulltext($right_object, $english_dsid),
           ),
         ),
       ),
@@ -100,11 +113,11 @@ function vassadora_fulltext_page_callback() {
         'sections' => array(
           array(
             'label' => t('Left'),
-            'text' => vassadora_load_fulltext($left_object, 'TRANSCRIPTION_GER'),
+            'text' => vassadora_load_fulltext($left_object, $german_dsid),
           ),
           array(
             'label' => t('Right'),
-            'text' => vassadora_load_fulltext($right_object, 'TRANSCRIPTION_GER'),
+            'text' => vassadora_load_fulltext($right_object, $german_dsid),
           ),
         ),
       ),
@@ -139,7 +152,7 @@ function vassadora_fulltext_page_callback() {
         'sections' => array(
           array(
             'label' => $object->label,
-            'text' => vassadora_load_fulltext($object, 'TRANSCRIPTION_ENG'),
+            'text' => vassadora_load_fulltext($object, $english_dsid),
           ),
         ),
       ),
@@ -148,7 +161,7 @@ function vassadora_fulltext_page_callback() {
         'sections' => array(
           array(
             'label' => $object->label,
-            'text' => vassadora_load_fulltext($object, 'TRANSCRIPTION_GER'),
+            'text' => vassadora_load_fulltext($object, $german_dsid),
           ),
         ),
       ),
