@@ -24,20 +24,20 @@
           request_data.pids.push(this.getPID(indices[i]));
         }
       }
-      $.get(Drupal.settings.vassadora.text_url, request_data,
+      $.get(Drupal.settings.vassardora.text_url, request_data,
         function(data) {
           jFullTextDiv.find('.BRfloatMeta').html(data);
 
           // Show the related element, when clicked.
-          $('li.vassadora_fulltext_link').click(function(eventObject) {
+          $('li.vassardora_fulltext_link').click(function(eventObject) {
             var li = $(this);
-            $('li.vassadora_fulltext_link').removeClass('active').children('a').removeClass('active');
+            $('li.vassardora_fulltext_link').removeClass('active').children('a').removeClass('active');
             li.addClass('active').children('a').addClass('active');
-            $('.vassadora_fulltext').hide().filter('#' + li.attr('name')).show();
+            $('.vassardora_fulltext').hide().filter('#' + li.attr('name')).show();
           });
 
           // Initially show the first "page".
-          $('li.vassadora_fulltext_link').first().click();
+          $('li.vassardora_fulltext_link').first().click();
         }
       );
     }

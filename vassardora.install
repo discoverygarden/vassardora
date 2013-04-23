@@ -5,10 +5,10 @@
  *
  * Deletes our variables.
  */
-function vassadora_uninstall() {
+function vassardora_uninstall() {
   $variables = array(
-    'vassadora_english_fulltext_datastream',
-    'vassadora_german_fulltext_datastream',
+    'vassardora_english_fulltext_datastream',
+    'vassardora_german_fulltext_datastream',
   );
 
   array_map('variable_del', $variables);

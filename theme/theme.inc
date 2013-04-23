@@ -11,10 +11,10 @@
  * @param array $pages
  *   The array of pages, as used in the related preprocess functions.
  *
- * @see template_preprocess_vassadora_one_page_fulltext()
- * @see template_preprocess_vassadora_two_page_fulltext()
+ * @see template_preprocess_vassardora_one_page_fulltext()
+ * @see template_preprocess_vassardora_two_page_fulltext()
  */
-function vassadora_filter_and_classify_page_entries(array &$pages) {
+function vassardora_filter_and_classify_page_entries(array &$pages) {
   foreach ($pages as &$page) {
     // Filter out sections missing text.
     $page['sections'] = array_values(array_filter($page['sections'], function($element) {
@@ -50,8 +50,8 @@ function vassadora_filter_and_classify_page_entries(array &$pages) {
 /**
  * Implements template_preprocess_HOOK().
  */
-function template_preprocess_vassadora_fulltext(array &$vars) {
-  vassadora_filter_and_classify_page_entries($vars['pages']);
+function template_preprocess_vassardora_fulltext(array &$vars) {
+  vassardora_filter_and_classify_page_entries($vars['pages']);
 
   if (count($vars['pages']) == 0) {
     $vars['pages']['no_text'] = array(

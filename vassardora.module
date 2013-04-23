@@ -5,22 +5,22 @@
  * Hook implementations for Vassar.
  */
 
-define('VASSADORA_FULLTEXT_PATH', 'vassadora/bookreader_fulltext');
+define('VASSARDORA_FULLTEXT_PATH', 'vassardora/bookreader_fulltext');
 
 /**
  * Implements hook_preprocess_HOOK().
  *
  * Adds in some JS overrides.
  */
-function vassadora_preprocess_islandora_internet_archive_bookreader(array &$variables) {
-  $mod_path = drupal_get_path('module', 'vassadora');
+function vassardora_preprocess_islandora_internet_archive_bookreader(array &$variables) {
+  $mod_path = drupal_get_path('module', 'vassardora');
   drupal_add_js("$mod_path/js/bookreader_overrides.js", array(
     'weight' => 5,
   ));
   drupal_add_css("$mod_path/css/bookreader.css");
   drupal_add_js(array(
-      'vassadora' => array(
-        'text_url' => url(VASSADORA_FULLTEXT_PATH),
+      'vassardora' => array(
+        'text_url' => url(VASSARDORA_FULLTEXT_PATH),
       ),
     ), array(
       'type' => 'setting',
@@ -31,21 +31,21 @@ function vassadora_preprocess_islandora_internet_archive_bookreader(array &$vari
 /**
  * Implements hook_menu().
  */
-function vassadora_menu() {
+function vassardora_menu() {
   $items = array();
 
-  $items[VASSADORA_FULLTEXT_PATH] = array(
-    'title' => 'Vassadora Fulltext Alternative Callback',
-    'page callback' => 'vassadora_fulltext_page_callback',
-    'access callback' => 'vassadora_fulltext_access_callback',
+  $items[VASSARDORA_FULLTEXT_PATH] = array(
+    'title' => 'Vassardora Fulltext Alternative Callback',
+    'page callback' => 'vassardora_fulltext_page_callback',
+    'access callback' => 'vassardora_fulltext_access_callback',
     'access arguments' => array(),
     'type' => MENU_CALLBACK,
   );
 
-  $items['admin/islandora/vassadora'] = array(
-    'title' => 'Vassadora Config',
+  $items['admin/islandora/vassardora'] = array(
+    'title' => 'Vassardora Config',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('vassadora_admin_form'),
+    'page arguments' => array('vassardora_admin_form'),
     'access arguments' => array('administer site configuration'),
     'file' => 'includes/admin.form.inc',
     'type'=> MENU_NORMAL_ITEM,
@@ -57,7 +57,7 @@ function vassadora_menu() {
 /**
  * Access callback.
  */
-function vassadora_fulltext_access_callback() {
+function vassardora_fulltext_access_callback() {
   $to_return = FALSE;
 
   if (isset($_GET['pids'])) {
@@ -81,10 +81,10 @@ function vassadora_fulltext_access_callback() {
 /**
  * Page callback to render the fulltext as desired.
  */
-function vassadora_fulltext_page_callback() {
+function vassardora_fulltext_page_callback() {
   // Get the datastream IDs from which we'll try to get the language variants.
-  $english_dsid = variable_get('vassadora_english_fulltext_datastream', 'TRANSCRIPTION_ENG');
-  $german_dsid = variable_get('vassadora_german_fulltext_datastream', 'TRANSCRIPTION_GER');
+  $english_dsid = variable_get('vassardora_english_fulltext_datastream', 'TRANSCRIPTION_ENG');
+  $german_dsid = variable_get('vassardora_german_fulltext_datastream', 'TRANSCRIPTION_GER');
 
   $output = '';
   $pids = (array) $_GET['pids'];
@@ -100,11 +100,11 @@ function vassadora_fulltext_page_callback() {
         'sections' => array(
           array(
             'label' => t('Left'),
-            'text' => vassadora_load_fulltext($left_object, $english_dsid),
+            'text' => vassardora_load_fulltext($left_object, $english_dsid),
           ),
           array(
             'label' => t('Right'),
-            'text' => vassadora_load_fulltext($right_object, $english_dsid),
+            'text' => vassardora_load_fulltext($right_object, $english_dsid),
           ),
         ),
       ),
@@ -113,11 +113,11 @@ function vassadora_fulltext_page_callback() {
         'sections' => array(
           array(
             'label' => t('Left'),
-            'text' => vassadora_load_fulltext($left_object, $german_dsid),
+            'text' => vassardora_load_fulltext($left_object, $german_dsid),
           ),
           array(
             'label' => t('Right'),
-            'text' => vassadora_load_fulltext($right_object, $german_dsid),
+            'text' => vassardora_load_fulltext($right_object, $german_dsid),
           ),
         ),
       ),
@@ -126,17 +126,17 @@ function vassadora_fulltext_page_callback() {
         'sections' => array(
           array(
             'label' => t('Left'),
-            'text' => vassadora_load_fulltext($left_object, 'OCR'),
+            'text' => vassardora_load_fulltext($left_object, 'OCR'),
           ),
           array(
             'label' => t('Right'),
-            'text' => vassadora_load_fulltext($right_object, 'OCR'),
+            'text' => vassardora_load_fulltext($right_object, 'OCR'),
           ),
         ),
       ),
     );
 
-    $output = theme('vassadora_fulltext', array(
+    $output = theme('vassardora_fulltext', array(
       'pids' => $pids,
       'objects' => $objects,
       'pages' => $pages,
@@ -152,7 +152,7 @@ function vassadora_fulltext_page_callback() {
         'sections' => array(
           array(
             'label' => $object->label,
-            'text' => vassadora_load_fulltext($object, $english_dsid),
+            'text' => vassardora_load_fulltext($object, $english_dsid),
           ),
         ),
       ),
@@ -161,7 +161,7 @@ function vassadora_fulltext_page_callback() {
         'sections' => array(
           array(
             'label' => $object->label,
-            'text' => vassadora_load_fulltext($object, $german_dsid),
+            'text' => vassardora_load_fulltext($object, $german_dsid),
           ),
         ),
       ),
@@ -191,12 +191,12 @@ function vassadora_fulltext_page_callback() {
       'sections' => array(
         array(
           'label' => $object->label,
-          'text' => vassadora_load_fulltext($object, 'OCR'),
+          'text' => vassardora_load_fulltext($object, 'OCR'),
         ),
       ),
     );
 
-    $output = theme('vassadora_fulltext', array(
+    $output = theme('vassardora_fulltext', array(
       'pids' => $pids,
       'objects' => array($object),
       'pages' => $pages,
@@ -213,16 +213,16 @@ function vassadora_fulltext_page_callback() {
 /**
  * Implements hook_theme().
  */
-function vassadora_theme() {
+function vassardora_theme() {
   $items = array();
 
-  $items['vassadora_fulltext'] = array(
+  $items['vassardora_fulltext'] = array(
     'file' => 'theme/theme.inc',
     'variables' => array(
       'pids' => NULL,
       'pages' => array(),
     ),
-    'template' => 'theme/vassadora-multiple-fulltexts',
+    'template' => 'theme/vassardora-multiple-fulltexts',
   );
 
   return $items;
@@ -239,7 +239,7 @@ function vassadora_theme() {
  * @return string|bool
  *   A string containing the fulltext, or FALSE if there was none to get.
  */
-function vassadora_load_fulltext(AbstractObject $object, $datastream_id) {
+function vassardora_load_fulltext(AbstractObject $object, $datastream_id) {
   if (isset($object[$datastream_id])) {
     return $object[$datastream_id]->content;
   }

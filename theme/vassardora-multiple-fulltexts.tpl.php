@@ -9,13 +9,13 @@
 ?>
 <ul class="tabs primary">
   <?php foreach ($pages as $name => $info):?>
-  <li name="vassadora_fulltext_<?php echo $name;?>" class="vassadora_fulltext_link"><a href='#BRfulltext'><?php echo $info['label']; ?></a></li>
+  <li name="vassardora_fulltext_<?php echo $name;?>" class="vassardora_fulltext_link"><a href='#BRfulltext'><?php echo $info['label']; ?></a></li>
   <?php endforeach; ?>
 </ul>
 <?php
 foreach ($pages as $name => $info):
 ?>
-<div class="vassadora_fulltext" id="vassadora_fulltext_<?php echo $name; ?>">
+<div class="vassardora_fulltext" id="vassardora_fulltext_<?php echo $name; ?>">
   <?php foreach ($info['sections'] as $section): ?>
   <div class="<?php echo $section['class']; ?>">
     <em class="label"><?php echo $section['label']; ?></em>
