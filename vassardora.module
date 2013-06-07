@@ -28,6 +28,7 @@ function vassardora_preprocess_islandora_internet_archive_bookreader(array &$var
   );
 }
 
+
 /**
  * Implements hook_menu().
  */
@@ -48,10 +49,84 @@ function vassardora_menu() {
     'page arguments' => array('vassardora_admin_form'),
     'access arguments' => array('administer site configuration'),
     'file' => 'includes/admin.form.inc',
-    'type'=> MENU_NORMAL_ITEM,
+    'type' => MENU_NORMAL_ITEM,
   );
-
+  $items['islandora/object/%islandora_object/Metadata'] = array(
+    'title' => 'Metadata',
+    'page callback' => 'vassardora_mods_view',
+    'page arguments' => array(2),
+    'type' => MENU_LOCAL_TASK,
+    'access callback' => 'vassardora_access_metadata',
+    'access arguments' => array(2),
+  );
   return $items;
+}
+
+/**
+ * Only show the metadata tab for bookCModel.
+ *
+ * @param AbstractObject $object
+ *   The fedora object to run the check on.
+ *
+ * @return bool
+ *   Returns TRUE if should be made available.
+ */
+function vassardora_access_metadata(AbstractObject $object) {
+  if (in_array('islandora:bookCModel', $object->models)) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Returns the block array to be rendered with MODS metadata.
+ *
+ * @param abstractobject $object
+ *   Fedora object to generate MODs forms for
+ *
+ * @return array
+ *   Returns an array of block data to be rendered.
+ */
+function vassardora_mods_view(AbstractObject $object) {
+  $block = array();
+  $block['content'] = array(
+    '#markup' => vassardora_mods_markup($object),
+  );
+  return $block;
+}
+
+/**
+ * Generate the markup for the given fedora objects metadata.
+ *
+ * @param AbstractObject $object
+ *   The fedora object to get a read only form for.
+ *
+ * @return unknown
+ *   Returns rendered html content.
+ */
+function vassardora_mods_markup(AbstractObject $object) {
+  $form = array(
+    'collection_metadata' => array(),
+  );
+  if (isset($object['MODS'])) {
+    $content = $object['MODS']->content;
+    $metadata = drupal_get_form('Islandora Book MODS Read Only', $content);
+    $form['collection_metadata']['metadata'] = $metadata;
+  }
+  $output = drupal_render($form);
+  return $output;
+}
+
+/**
+ * Implements hook_islandora_xml_form_builder_forms().
+ */
+function vassardora_islandora_xml_form_builder_forms() {
+  $module_path = drupal_get_path('module', 'vassardora');
+  return array(
+    'Islandora Book MODS Read Only' => array(
+      'form_file' => "$module_path/xml/book_form_mods_read_only.xml",
+    ),
+  );
 }
 
 /**
@@ -241,7 +316,7 @@ function vassardora_theme() {
  */
 function vassardora_load_fulltext(AbstractObject $object, $datastream_id) {
   if (isset($object[$datastream_id])) {
-    return $object[$datastream_id]->content;
+    return htmlspecialchars($object[$datastream_id]->content);
   }
 
   return FALSE;
