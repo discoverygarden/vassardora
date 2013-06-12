@@ -11,8 +11,8 @@
  */
 function vassardora_uninstall() {
   $variables = array(
-    'vassardora_english_fulltext_datastream',
-    'vassardora_german_fulltext_datastream',
+    'vassardora_language_one_fulltext_datastream',
+    'vassardora_language_two_fulltext_datastream',
   );
 
   array_map('variable_del', $variables);

@@ -153,13 +153,14 @@ function vassardora_fulltext_access_callback() {
   return $to_return;
 }
 
+
 /**
  * Page callback to render the fulltext as desired.
  */
 function vassardora_fulltext_page_callback() {
   // Get the datastream IDs from which we'll try to get the language variants.
-  $english_dsid = variable_get('vassardora_english_fulltext_datastream', 'TRANSCRIPTION_ENG');
-  $german_dsid = variable_get('vassardora_german_fulltext_datastream', 'TRANSCRIPTION_GER');
+  $lang_one_dsid = variable_get('vassardora_language_one_fulltext_datastream', 'LANGUAGE_1');
+  $lang_two_dsid = variable_get('vassardora_language_two_fulltext_datastream', 'LANGUAGE_2');
 
   $output = '';
   $pids = (array) $_GET['pids'];
@@ -168,31 +169,30 @@ function vassardora_fulltext_page_callback() {
     // Render two-page view.
     $objects = array_filter(array_map('islandora_object_load', $pids));
     list($left_object, $right_object) = $objects;
-
     $pages = array(
-      'english' => array(
-        'label' => t('English'),
+      'language_1' => array(
+        'label' => t(variable_get('vassardora_language_one', 'Language 1')),
         'sections' => array(
           array(
             'label' => t('Left'),
-            'text' => vassardora_load_fulltext($left_object, $english_dsid),
+            'text' => vassardora_load_fulltext($left_object, $lang_one_dsid),
           ),
           array(
             'label' => t('Right'),
-            'text' => vassardora_load_fulltext($right_object, $english_dsid),
+            'text' => vassardora_load_fulltext($right_object, $lang_one_dsid),
           ),
         ),
       ),
-      'german' => array(
-        'label' => t('German'),
+      'language_2' => array(
+        'label' => t(variable_get('vassardora_language_two', 'Language 2')),
         'sections' => array(
           array(
             'label' => t('Left'),
-            'text' => vassardora_load_fulltext($left_object, $german_dsid),
+            'text' => vassardora_load_fulltext($left_object, $lang_two_dsid),
           ),
           array(
             'label' => t('Right'),
-            'text' => vassardora_load_fulltext($right_object, $german_dsid),
+            'text' => vassardora_load_fulltext($right_object, $lang_two_dsid),
           ),
         ),
       ),
@@ -222,21 +222,21 @@ function vassardora_fulltext_page_callback() {
     $object = islandora_object_load(reset($pids));
 
     $pages = array(
-      'english' => array(
-        'label' => t('English'),
+      'language_1' => array(
+        'label' => t(variable_get('vassardora_language_one', 'Language 1')),
         'sections' => array(
           array(
             'label' => $object->label,
-            'text' => vassardora_load_fulltext($object, $english_dsid),
+            'text' => vassardora_load_fulltext($object, $lang_one_dsid),
           ),
         ),
       ),
-      'german' => array(
-        'label' => t('German'),
+      'language_2' => array(
+        'label' => t(variable_get('vassardora_language_two', 'Language 2')),
         'sections' => array(
           array(
             'label' => $object->label,
-            'text' => vassardora_load_fulltext($object, $german_dsid),
+            'text' => vassardora_load_fulltext($object, $lang_two_dsid),
           ),
         ),
       ),
@@ -244,17 +244,17 @@ function vassardora_fulltext_page_callback() {
 
     // Kinda gross, but we only want to add the side-by-side if we have text
     // in both languages.
-    if ($pages['english']['sections'][0]['text'] && $pages['german']['sections'][0]['text']) {
+    if ($pages['language_1']['sections'][0]['text'] && $pages['language_2']['sections'][0]['text']) {
       $pages['full_text'] = array(
         'label' => t('Side-by-side'),
         'sections' => array(
           array(
-            'label' => t('English'),
-            'text' => $pages['english']['sections'][0]['text'],
+            'label' => t(variable_get('vassardora_language_one', 'Language 1')),
+            'text' => $pages['language_1']['sections'][0]['text'],
           ),
           array(
-            'label' => t('German'),
-            'text' => $pages['german']['sections'][0]['text'],
+            'label' => t(variable_get('vassardora_language_two', 'Language 2')),
+            'text' => $pages['language_2']['sections'][0]['text'],
           ),
         ),
       );
@@ -316,7 +316,7 @@ function vassardora_theme() {
  */
 function vassardora_load_fulltext(AbstractObject $object, $datastream_id) {
   if (isset($object[$datastream_id])) {
-    return htmlspecialchars($object[$datastream_id]->content);
+    return $object[$datastream_id]->content;
   }
 
   return FALSE;

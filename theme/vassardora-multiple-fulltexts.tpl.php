@@ -19,7 +19,7 @@ foreach ($pages as $name => $info):
   <?php foreach ($info['sections'] as $section): ?>
   <div class="<?php echo $section['class']; ?>">
     <em class="label"><?php echo $section['label']; ?></em>
-    <?php echo $section['text']; ?>
+    <pre><?php echo $section['text']; ?></pre>
   </div>
   <?php endforeach; ?>
 </div>

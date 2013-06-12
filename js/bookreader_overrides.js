@@ -29,8 +29,8 @@
       }
       $.get(Drupal.settings.vassardora.text_url, request_data,
         function(data) {
-          jFullTextDiv.find('.BRfloatMeta').html("<pre>"+ data + "</pre>");
-
+          jFullTextDiv.find('.BRfloatMeta').html(data);
+          $.trim($('.BRfloatMeta').text());
           // Show the related element, when clicked.
           $('li.vassardora_fulltext_link').click(function(eventObject) {
             var li = $(this);
