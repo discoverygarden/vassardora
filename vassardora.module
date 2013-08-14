@@ -140,7 +140,7 @@ function vassardora_fulltext_access_callback() {
     foreach ($pids as $pid) {
       $object = islandora_object_load($pid);
       if ($object) {
-        $to_return = islandora_user_access($object, array(FEDORA_VIEW_OBJECTS));
+        $to_return = islandora_user_access($object, array(ISLANDORA_VIEW_OBJECTS));
 
         if (!$to_return) {
           // If anything returns FALSE, return it...
