@@ -4,11 +4,11 @@
  */
 
 (function ($) {
-  var buildTextDiv = function(jFulltextDiv) {
-    jFulltextDiv.find('.BRfloatMeta').height(600);
-    jFulltextDiv.find('.BRfloatMeta').width(600);
+  var buildTextDiv = function(jFullTextDiv) {
+    jFullTextDiv.find('.BRfloatMeta').height(600);
+    jFullTextDiv.find('.BRfloatMeta').width(600);
     if (3 == this.mode) {
-      jFulltextDiv.find('.BRfloatMeta').html('<div>' + Drupal.t('Full text not supported for this view.') + '</div>');
+      jFullTextDiv.find('.BRfloatMeta').html('<div>' + Drupal.t('Full text not supported for this view.') + '</div>');
     }
     else {
       var index = this.currentIndex();
@@ -29,7 +29,7 @@
       }
       $.get(Drupal.settings.vassardora.text_url, request_data,
         function(data) {
-          jFulltextDiv.find('.BRfloatMeta').html(data);
+          jFullTextDiv.find('.BRfloatMeta').html(data);
           $.trim($('.BRfloatMeta').text());
           // Show the related element, when clicked.
           $('li.vassardora_fulltext_link').click(function(eventObject) {
