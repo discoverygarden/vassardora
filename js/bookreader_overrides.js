@@ -4,7 +4,7 @@
  */
 
 (function ($) {
-  IslandoraBookReader.prototype.buildFullTextDiv = function(jFullTextDiv) {
+  var buildTextDiv = function(jFullTextDiv) {
     jFullTextDiv.find('.BRfloatMeta').height(600);
     jFullTextDiv.find('.BRfloatMeta').width(600);
     if (3 == this.mode) {
@@ -44,5 +44,11 @@
         }
       );
     }
+  };
+  if (typeof IslandoraDjatokaBookReader !== 'undefined') {
+    IslandoraDjatokaBookReader.prototype.buildFullTextDiv = buildTextDiv;
   }
-})(jQuery)
+  else if (typeof IslandoraIiifBookReader !== 'undefined') {
+    IslandoraIiifBookReader.prototype.buildFullTextDiv = buildTextDiv;
+  }
+})(jQuery);
